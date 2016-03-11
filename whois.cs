@@ -7,6 +7,7 @@ using System;
 using System.Text;
 using System.Net.Sockets;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Cryptograph_Whois_DNS_Tools
 {
@@ -35,7 +36,7 @@ namespace Cryptograph_Whois_DNS_Tools
 
         private string getWhoisServer(string tld)
         {
-            string[,] whoisServers = new string[145, 2] {
+            string[,] whoisServers = new string[143, 2] {
                 { "com", "whois.verisign-grs.com" },
                 { "net", "whois.verisign-grs.com" },
                 { "org","whois.publicinterestregistry.net" },
@@ -178,9 +179,7 @@ namespace Cryptograph_Whois_DNS_Tools
                 { "vg","whois.adamsnames.tc"},
                 { "yu","whois.ripe.net" },
                 { "science","whois.iana.org" },
-                { "xyz", "whois.nic.xyz" },
-                { "ist", "whois.nic.istanbul" },
-                { "istanbul", "whois.nic.istanbul" }
+                { "xyz", "whois.nic.xyz" }
             };
 
 
@@ -756,14 +755,6 @@ namespace Cryptograph_Whois_DNS_Tools
             {
                 return whoisServers[142, 1];
             }
-            else if (tld == "ist")
-            {
-                return whoisServers[143, 1];
-            }
-            else if (tld == "istanbul")
-            {
-                return whoisServers[144, 1];
-            }
             else
             {
                 return whoisServers[0, 1];
@@ -782,7 +773,7 @@ namespace Cryptograph_Whois_DNS_Tools
                 Stream objStream = TCPC.GetStream();
                 objStream.Write(arrDomain, 0, strDomain.Length);
                 StreamReader objSR = new StreamReader(TCPC.GetStream(), Encoding.ASCII);
-                string icerik = objSR.ReadToEnd();//Regex.Replace(objSR.ReadToEnd(), "\n", "<br>");
+                string icerik = Regex.Replace(objSR.ReadToEnd(), "\n", "<br>");
                 TCPC.Close();
                 return icerik;
             }
