@@ -196,15 +196,14 @@ namespace Cryptograph_Whois_DNS_Tools
             {
                 string domainname = GetDomainName(domain);
                 string whoisserver = getWhoisServer(GetDomainTld(domain));
-                TcpClient TCPC = new TcpClient(whoisserver, 43);
                 string strDomain = domainname + "\r\n";
                 byte[] arrDomain = Encoding.ASCII.GetBytes(strDomain);
-                Stream objStream = TCPC.GetStream();
-                objStream.Write(arrDomain, 0, strDomain.Length);
-                StreamReader objSR = new StreamReader(TCPC.GetStream(), Encoding.ASCII);
-                string icerik = objSR.ReadToEnd();//Regex.Replace(objSR.ReadToEnd(), "\n", "<br>");
-                TCPC.Close();
-                return icerik;
+                using (TcpClient TCPC = new TcpClient(whoisserver, 43))
+                {
+                    TCPC.GetStream().Write(arrDomain, 0, strDomain.Length);
+                    using (StreamReader objSR = new StreamReader(TCPC.GetStream(), Encoding.ASCII))
+                        return objSR.ReadToEnd();//Regex.Replace(objSR.ReadToEnd(), "\n", "<br>");
+                }
             }
             catch (Exception ex)
             {
